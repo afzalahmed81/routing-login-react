@@ -4,5 +4,23 @@
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "mongoose": "^6.6.1"
-  }
+  },
+  "name": "routing-login",
+  "version": "1.0.0",
+  "description": "Server file for routing and login in Ract",
+  "main": "server.mjs",
+  "devDependencies": {},
+  "scripts": {
+    "test": "node server.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afzalahmed81/routing-login-react.git"
+  },
+  "author": "Afzal Ahmed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afzalahmed81/routing-login-react/issues"
+  },
+  "homepage": "https://github.com/afzalahmed81/routing-login-react#readme"
 }

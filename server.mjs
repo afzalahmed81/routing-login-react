@@ -83,6 +83,67 @@ app.post("/signup", (req, res) => {
     })
 });
 
+app.get("/users", async (req, res) => {
+    try {
+        let allUser = await userModel.find({}).exec();
+        res.send(allUser);
+    } catch (error) {
+        res.status(500).send({ message: "Error getting users" });
+    }
+
+})
+app.post("/login", (req, res) => {
+
+    let body = req.body;
+
+    if (!body.email || !body.password) { // null check - undefined, "", 0 , false, null , NaN
+        res.status(400).send(
+            `required fields missing, request example: 
+                {
+                    "email": "abc@abc.com",
+                    "password": "12345"
+                }`
+        );
+        return;
+    }
+
+    // check if user already exist // query email user
+    userModel.findOne({ email: body.email }, (err, data) => {
+        if (!err) {
+            console.log("data: ", data);
+
+            if (data) { // user found
+                varifyHash(body.password, data.password).then(isMatched => {
+
+                    console.log("isMatched: ", isMatched);
+
+                    if (isMatched) {
+                        // TODO:  add JWT token
+                        res.send({ message: "login successful" });
+                        return;
+                    } else {
+                        console.log("user not found");
+                        res.status(401).send({ message: "Incorrect email or password" });
+                        return;
+                    }
+                })
+
+            } else { // user not already exist
+                console.log("user not found");
+                res.status(401).send({ message: "Incorrect email or password" });
+                return;
+            }
+        } else {
+            console.log("db error: ", err);
+            res.status(500).send({ message: "login failed, please try later" });
+            return;
+        }
+    })
+
+
+
+})
+
 
 
 app.listen(port, () => {
@@ -91,7 +152,7 @@ app.listen(port, () => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 let dburI = 'mongodb+srv://afzal81:afz@cluster0.9tmbp5a.mongodb.net/weatherAppBase?retryWrites=true&w=majority';
-mongoose.connect(dbURI);
+mongoose.connect(dburI);
 
 ////////////////mongodb connected disconnected events///////////////////////////////////////////////
 mongoose.connection.on('connected', function () {//connected
